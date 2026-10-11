@@ -23,7 +23,6 @@ body{background:#05070d;color:#fff;overflow-x:hidden;min-height:100vh;display:fl
 .modalBg.show{display:flex}
 .bd{position:absolute;inset:0;background:rgba(2,5,13,.8);backdrop-filter:blur(14px);animation:bi .25s}
 .box{position:relative;width:100%;max-width:440px;border-radius:24px;border:1px solid rgba(0,229,255,.25);background:rgba(10,18,40,.9);backdrop-filter:blur(16px);animation:mi .32s cubic-bezier(.16,1,.3,1)}
-
 /* === 手機版修復 === */
 @media (max-width: 768px) {
   body { padding: 0 0 80px 0; }
@@ -58,18 +57,15 @@ h1, h2, .title {
   overflow-wrap: break-word;
   line-height: 1.2;
 }
-
-
-/* ===== 手機版3問題最終修復 - 保留原圖 ===== */
+/* ===== 浮窗不擋圖+可拖動修復 ===== */
 @media (max-width: 768px){
-  /* 問題1: 手機版圖片比例不對 -> 改為自適應，不裁切 */
   .card{
     aspect-ratio: auto !important;
     height: auto !important;
     min-height: 0 !important;
     overflow: visible !important;
     border-radius: 20px !important;
-    background: rgba(10,18,40,0.6) !important;
+    padding-bottom: 40px !important;
   }
   .card img, #mainImg{
     width: 100% !important;
@@ -79,75 +75,56 @@ h1, h2, .title {
     object-position: center top !important;
     max-height: 50vh !important;
     display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
     border-radius: 20px !important;
   }
-  
-  /* 問題2: 小浮窗裡面圖片不顯示 -> 強制可見 */
+  /* 小白圓浮窗：移到右下角，不擋主圖，縮小一點 */
   #drag{
-    position: relative !important;
+    position: absolute !important;
     left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
+    right: 12px !important;
+    bottom: -16px !important;
     top: auto !important;
     transform: none !important;
-    margin: 16px auto 0 auto !important;
+    margin: 0 !important;
+    width: 96px !important;
+    height: 96px !important;
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    z-index: 10 !important;
-    width: 130px !important;
+    z-index: 20 !important;
+    touch-action: none !important;
+    cursor: grab !important;
+    pointer-events: auto !important;
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,.5));
   }
-  #drag > div{
-    width: 130px !important;
-    height: 130px !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+  #drag > div:first-child{
+    width: 96px !important;
+    height: 96px !important;
   }
   #drag img{
     display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
     visibility: visible !important;
     opacity: 1 !important;
   }
-  
-  /* 問題3: 拖動效果不好 -> 手機版禁用拖動，改為固定 */
-  #drag{
-    cursor: default !important;
-    touch-action: auto !important;
-    pointer-events: none !important;
-  }
-  
-  /* 文字被切修復 */
-  h1{
-    overflow: visible !important;
-    line-height: 1.15 !important;
-    margin-top: 16px !important;
-    padding: 8px 0 !important;
-    font-size: 42px !important;
-  }
-  h1 span{
-    overflow: visible !important;
-    line-height: 1.2 !important;
-    display: block !important;
-  }
-  
-  /* 佈局單欄 */
+  h1{overflow:visible !important;line-height:1.15 !important;margin-top:16px !important;padding:8px 0 !important;font-size:42px !important}
+  h1 span{overflow:visible !important;line-height:1.2 !important;display:block !important}
   main>div{grid-template-columns:1fr !important;gap:16px !important}
   main>div>div:first-child{order:2 !important}
-  main>div>div:last-child{order:1 !important;padding-bottom:12px !important}
+  main>div>div:last-child{order:1 !important;position:relative !important;padding-bottom:30px !important}
 }
-
 @media (min-width: 769px){
-  /* 桌機版拖動優化 */
-  #drag{cursor:grab;touch-action:none;transition: transform 0.1s ease-out}
+  #drag{
+    position: absolute !important;
+    left: 58% !important;
+    bottom: -10px !important;
+    cursor: grab !important;
+    touch-action: none !important;
+    z-index: 25 !important;
+  }
+  #drag:active{cursor:grabbing !important}
+}
   #drag:active{cursor:grabbing}
 }
-
 </style></head><body>
 <div class="bg"></div>
 <div class="beam" style="left:12%;animation:b 6s ease-in-out infinite" id="beam1"></div>
@@ -175,41 +152,49 @@ h1, h2, .title {
 <div id="modal" class="modalBg"><div class="bd" onclick="closeM()"></div><div class="box"><div style="padding:24px 28px 8px;display:flex;justify-content:space-between;gap:16px"><div><div style="display:flex;gap:10px;align-items:center"><div style="width:28px;height:28px;border-radius:8px;background:#fff;display:grid;place-items:center;font-weight:900;color:#000;font-size:10px">AOV</div><span class="o" style="font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.5)">ARENA OF VALOR</span></div><div style="margin-top:16px;font-size:22px;font-weight:900">活動說明</div><div style="margin-top:4px;display:flex;gap:8px;align-items:center"><span style="width:6px;height:6px;border-radius:99px;background:#00e5ff;box-shadow:0 0 8px #00e5ff"></span><span style="font-size:10px;letter-spacing:.18em;color:#7afcff">LIMITED • 10TH ANNIVERSARY</span></div></div><button onclick="closeM()" style="width:32px;height:32px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.6);cursor:pointer">×</button></div>
 <div style="padding:8px 28px"><div style="border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:16px"><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,.8)">本次活動由 <span style="font-weight:900;font-style:italic;color:#fff">Red Bull</span> 聯合發放，需確認是否首次領取。</p><div style="margin-top:12px;display:flex;gap:8px;font-size:11px;color:rgba(255,255,255,.4)"><span style="padding:4px 8px;border-radius:99px;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2);color:#7afcff">首次領取驗證</span><span style="padding:4px 8px;border-radius:99px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)">官方授權通道</span></div></div></div>
 <div style="padding:20px 28px;display:flex;gap:12px"><button onclick="closeM()" style="height:44px;flex:1;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7);font-weight:700;cursor:pointer">取消</button><a href="https://lin.ee/th0bLRi" target="_blank" style="height:44px;flex:1;border-radius:99px;background:linear-gradient(90deg,#00e5ff,#7afcff);color:#000;font-weight:900;font-size:13px;display:grid;place-items:center;text-decoration:none;box-shadow:0 0 28px rgba(0,229,255,.35)">立即領取 →</a></div></div></div>
-
 <script>
 let mx=0,my=0;
 addEventListener('mousemove',function(e){
   if(window.innerWidth<=768) return;
   mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;
-  var im=document.getElementById('mainImg');if(im)im.style.transform='translate('+(mx*-10)+'px,'+(my*-8)+'px) scale(1.02)';
+  var im=document.getElementById('mainImg');if(im)im.style.transform='translate('+(mx*-8)+'px,'+(my*-6)+'px) scale(1.02)';
 });
 var p=document.getElementById('particles');if(p){for(var i=0;i<14;i++){var d=document.createElement('div');d.style.position='absolute';d.style.width='2px';d.style.height='14px';d.style.background='linear-gradient(180deg,rgba(255,255,255,.6),transparent)';d.style.borderRadius='999px';d.style.left=(6+i*7)+'%';d.style.top=(8+i%5*18)+'%';d.style.animation=(i%2?'fs':'f')+' '+(5+i*.55)+'s ease-in-out infinite';d.style.animationDelay=(i*.35)+'s';d.style.opacity=.32+i%3*.16;d.style.transform='rotate('+(-22+i*6)+'deg)';p.appendChild(d);}}
 function openM(){document.getElementById('modal').classList.add('show');document.body.style.overflow='hidden'}function closeM(){document.getElementById('modal').classList.remove('show');document.body.style.overflow=''}
 addEventListener('keydown',function(e){if(e.key==='Escape')closeM()});
-// 拖動 - 手機版禁用
+// 可拖動白圓 - 手機桌機都能拖，不擋圖
 var drag=document.getElementById('drag');
 if(drag){
-  let sx=0,sy=0,dragging=false,startLeft=0,startTop=0;
+  let sx=0,sy=0,startX=0,startY=0,dragging=false;
   drag.addEventListener('pointerdown',function(e){
-    if(window.innerWidth<=768) return;
     sx=e.clientX;sy=e.clientY;
-    let rect=drag.getBoundingClientRect();
-    startLeft=rect.left;startTop=rect.top;
+    const rect=drag.getBoundingClientRect();
+    startX=rect.left;startY=rect.top;
     dragging=true;
-    try{drag.setPointerCapture(e.pointerId);}catch(e){}
+    drag.style.transition='none';
+    try{drag.setPointerCapture(e.pointerId);}catch(err){}
     e.preventDefault();
   });
-  addEventListener('pointermove',function(e){
-    if(!dragging || window.innerWidth<=768) return;
+  window.addEventListener('pointermove',function(e){
+    if(!dragging) return;
     let dx=e.clientX-sx,dy=e.clientY-sy;
+    // 限制在視窗內
+    let maxX=window.innerWidth-100, maxY=window.innerHeight-100;
+    let nx=Math.max(4,Math.min(maxX,startX+dx));
+    let ny=Math.max(4,Math.min(maxY,startY+dy));
     drag.style.position='fixed';
-    drag.style.left=Math.max(0,Math.min(window.innerWidth-130,startLeft+dx))+'px';
-    drag.style.top=Math.max(0,Math.min(window.innerHeight-130,startTop+dy))+'px';
+    drag.style.left=nx+'px';
+    drag.style.top=ny+'px';
+    drag.style.right='auto';
     drag.style.bottom='auto';
-    drag.style.transform='rotate(5deg)';
+    drag.style.transform='rotate(3deg) scale(1.05)';
   });
-  addEventListener('pointerup',function(){dragging=false;if(drag)drag.style.transform='none';});
+  window.addEventListener('pointerup',function(){
+    if(!dragging) return;
+    dragging=false;
+    drag.style.transition='transform 0.2s ease';
+    drag.style.transform='rotate(0deg) scale(1)';
+  });
 }
 </script>
-
 </body></html>
